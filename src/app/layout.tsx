@@ -1,13 +1,17 @@
 import "@/styles/globals.css";
 
 import { type Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, } from "@clerk/nextjs";
+// 引入汉化文件
+import { zhCN } from "@clerk/localizations";
+// 引入翻译文件
+import zhCNlocales from "@/locales/zh.json";
+import merge from "lodash.merge";
+
+import ThemeProvider from "@/components/ThemeProvider";
+import Header from "@/components/Header";
+import { GeistSans } from "geist/font/sans";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -18,19 +22,26 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // 合并翻译文件
+  const localization = merge(zhCN, zhCNlocales);
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <ClerkProvider localization={localization}>
+      <html
+        lang="zh-CN"
+        className={`${GeistSans.variable}`}
+        suppressHydrationWarning
+      >
         <body>
-          <header>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          <main>{children}</main>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <div className="flex w-full flex-col items-center">{children}</div>
+            <Toaster duration={1000} />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
