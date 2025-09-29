@@ -3,10 +3,10 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { createListZodSchema, type createListZodSchemaType } from "prisma/createList";
+import { createListZodSchema, type createListZodSchemaType } from "@/schema/createList";
 
 export async function createList(data: createListZodSchemaType) {
-    const user = await currentUser();
+  const user = await currentUser();
 
   if (!user) {
     throw new Error("用户未登录，请先登录");
@@ -21,8 +21,8 @@ export async function createList(data: createListZodSchemaType) {
     };
   }
 
-   // Todo: 数据库处理
-   await prisma.list.create({
+  // Todo: 数据库处理
+  await prisma.list.create({
     data: {
       userId: user.id,
       color: data.color,
@@ -38,4 +38,20 @@ export async function createList(data: createListZodSchemaType) {
     success: true,
     message: "清单创建成功",
   };
+}
+
+export async function deleteList(id: number) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("用户未登录，请先登录");
+  }
+
+  await prisma.list.delete({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+  });
+
+  revalidatePath("/");
 }

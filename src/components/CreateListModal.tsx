@@ -35,7 +35,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { ListMap } from "@/lib/const";
 import { useState } from "react";
-import { createListZodSchema, type createListZodSchemaType } from "prisma/createList";
+import { createListZodSchema, type createListZodSchemaType } from "@/schema/createList";
 import { createList } from "@/actions/list";
 import { toast } from "sonner";
 

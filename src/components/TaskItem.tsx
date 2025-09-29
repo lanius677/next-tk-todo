@@ -1,0 +1,41 @@
+"use client";
+
+import type { Task } from "@prisma/client";
+import { Checkbox } from "./ui/checkbox";
+import { cn } from "@/lib/utils";
+import dayjs from "dayjs";
+
+export default function TaskItem({ task }: { task: Task }) {
+
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox
+        id={task.id.toString()}
+        className="h-5 w-5 bg-white"
+        checked={task.done}
+        onCheckedChange={async (value) => {
+          console.log(value);
+        }}
+      />
+
+      <label
+        htmlFor={task.id.toString()}
+        className={cn(
+          "flex flex-row items-center gap-2",
+          task.done && "line-through",
+        )}
+      >
+        {task.content}
+        {task.expiresAt && (
+          <p
+            className={cn("text-xs text-white", {
+              "text-red-800": Date.now() - task.expiresAt.getTime() > 0,
+            })}
+          >
+            {dayjs(task.expiresAt).format("DD/MM/YYYY")}
+          </p>
+        )}
+      </label>
+    </div>
+  )
+}
