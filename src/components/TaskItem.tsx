@@ -4,6 +4,7 @@ import type { Task } from "@prisma/client";
 import { Checkbox } from "./ui/checkbox";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
+import { setTaskDone } from "@/actions/task";
 
 export default function TaskItem({ task }: { task: Task }) {
 
@@ -13,8 +14,8 @@ export default function TaskItem({ task }: { task: Task }) {
         id={task.id.toString()}
         className="h-5 w-5 bg-white"
         checked={task.done}
-        onCheckedChange={async (value) => {
-          console.log(value);
+        onCheckedChange={async () => {
+           await setTaskDone(task.id);
         }}
       />
 

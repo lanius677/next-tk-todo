@@ -21,7 +21,7 @@ export async function createTask(data: createTaskZodSchemaType) {
     };
   }
 
-   const { content, expiresAt, todoId } = data;
+  const { content, expiresAt, todoId } = data;
 
   await prisma.task.create({
     data: {
@@ -38,4 +38,24 @@ export async function createTask(data: createTaskZodSchemaType) {
 
   revalidatePath("/");
 
+}
+
+export async function setTaskDone(id: number) {
+  const user = await currentUser();
+
+  if (!user) {
+    throw new Error("用户未登录，请先登录");
+  }
+
+  await prisma.task.update({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+    data: {
+      done: true,
+    },
+  });
+
+  revalidatePath("/");
 }
